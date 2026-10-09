@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICT Viva Prep — National University</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --ink:#1e2430;
+  --ink-soft:#5c6472;
+  --line:#e2e6ec;
+  --primary:#2e5aa8;
+  --primary-dark:#1f3f7a;
+  --primary-soft:#e8effa;
+  --accent:#1e8f6a;
+  --accent-soft:#e6f5ef;
+  --done:#1e8f6a;
+  --shadow:0 1px 3px rgba(20,30,50,0.08);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Hind Siliguri', sans-serif;
+  line-height:1.7;
+  -webkit-text-size-adjust:100%;
+  padding-bottom:40px;
+}
+.wrap{ max-width:760px; margin:0 auto; padding:0 12px; }
+
+header{
+  background:linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color:#fff;
+  padding:22px 14px 18px;
+  text-align:center;
+}
+header h1{ margin:0 0 4px; font-size:21px; font-weight:700; }
+header p{ margin:0; font-size:13px; opacity:0.9; }
+
+.stickybar{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:var(--bg);
+  padding:12px 0 8px;
+}
+
+.progresswrap{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 14px;
+  margin:12px 0;
+  box-shadow:var(--shadow);
+}
+.progresswrap .toprow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:13px;
+  margin-bottom:6px;
+}
+.progresswrap .toprow b{ color:var(--primary); font-family:'JetBrains Mono', monospace; }
+.progressbar{
+  height:8px;
+  background:var(--line);
+  border-radius:6px;
+  overflow:hidden;
+}
+.progressbar .fill{
+  height:100%;
+  background:linear-gradient(90deg, var(--accent), #27b58a);
+  width:0%;
+  transition:width 0.3s ease;
+}
+.resetbtn{
+  background:none;
+  border:none;
+  color:var(--ink-soft);
+  font-size:11.5px;
+  text-decoration:underline;
+  cursor:pointer;
+  padding:0;
+  font-family:'Hind Siliguri', sans-serif;
+}
+
+.searchbox{
+  width:100%;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--line);
+  font-size:14.5px;
+  font-family:'Hind Siliguri', sans-serif;
+  background:var(--card);
+  margin-bottom:10px;
+}
+.searchbox:focus{ outline:none; border-color:var(--primary); }
+
+.filterrow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  padding-bottom:4px;
+}
+.chip{
+  flex:0 0 auto;
+  background:var(--card);
+  border:1.5px solid var(--line);
+  color:var(--ink-soft);
+  padding:6px 13px;
+  border-radius:20px;
+  font-size:12.5px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+.chip.active{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#fff;
+}
+
+#count-info{
+  font-size:12px;
+  color:var(--ink-soft);
+  margin:6px 2px 2px;
+}
+
+.qlist{ margin-top:8px; }
+
+.qcard{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:10px;
+  margin-bottom:8px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.qcard.done{ border-left:4px solid var(--done); }
+
+.qhead{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:12px 14px;
+  cursor:pointer;
+  user-select:none;
+}
+.qnum{
+  flex:0 0 auto;
+  background:var(--primary-soft);
+  color:var(--primary-dark);
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  font-weight:700;
+  border-radius:6px;
+  padding:3px 7px;
+  min-width:28px;
+  text-align:center;
+}
+.qcard.done .qnum{ background:var(--accent-soft); color:var(--accent); }
+.qtext{
+  flex:1;
+  font-size:14.5px;
+  font-weight:600;
+  color:var(--ink);
+}
+.qarrow{
+  flex:0 0 auto;
+  color:var(--ink-soft);
+  font-size:12px;
+  transition:transform 0.2s ease;
+  margin-top:3px;
+}
+.qcard.open .qarrow{ transform:rotate(90deg); }
+
+.qbody{
+  display:none;
+  padding:0 14px 14px 50px;
+  font-size:14px;
+  color:var(--ink-soft);
+  border-top:1px dashed var(--line);
+}
+.qcard.open .qbody{ display:block; padding-top:10px; }
+
+.checkrow{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:10px;
+  font-size:12.5px;
+  color:var(--ink-soft);
+}
+.checkrow input{ width:15px; height:15px; accent-color: var(--accent); cursor:pointer; }
+.checkrow label{ cursor:pointer; }
+
+.catlabel{
+  font-family:'Hind Siliguri', sans-serif;
+  font-size:12px;
+  letter-spacing:0.3px;
+  color:var(--primary);
+  font-weight:700;
+  margin:18px 2px 6px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--ink-soft);
+  padding:30px 10px;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ICT Viva Prep</h1>
+  <p>তথ্য ও যোগাযোগ প্রযুক্তি — মৌখিক পরীক্ষার প্রস্তুতি</p>
+</header>
+
+<div class="wrap">
+  <div class="stickybar">
+    <div class="progresswrap">
+      <div class="toprow">
+        <span>অগ্রগতি: <b id="progress-text">0/0</b></span>
+        <button class="resetbtn" onclick="resetProgress()">রিসেট করুন</button>
+      </div>
+      <div class="progressbar"><div class="fill" id="progress-fill"></div></div>
+    </div>
+    <input type="text" id="search" class="searchbox" placeholder="প্রশ্ন খুঁজুন..." oninput="renderList()">
+    <div class="filterrow" id="filter-row"></div>
+    <div id="count-info"></div>
+  </div>
+
+  <div class="qlist" id="qlist"></div>
+</div>
+
+<script>
+// প্রতিটি অধ্যায়: { cat, items: [ [নম্বর, প্রশ্ন, উত্তর], ... ] }
+const chapters = [
+{ cat:"১ম অধ্যায়: ICT ও কম্পিউটার সিস্টেমের পরিচয়", items:[
+ [1,"ICT বলতে কী বুঝ? [What is meant by ICT?]","ICT হলো তথ্য ও যোগাযোগ প্রযুক্তি, যা কম্পিউটার এবং টেলিযোগাযোগ ব্যবস্থা ব্যবহার করে তথ্য প্রক্রিয়াকরণ, সংরক্ষণ ও আদানপ্রদানের সুবিধা দেয়।"],
+ [2,"ICT এর পূর্ণরূপ কী? [What is the full form of ICT?]","ICT এর পূর্ণরূপ Information and Communication Technology."],
+ [3,"ই-মেইল কী? [What is e-mail?]","ই-মেইল হলো ইন্টারনেট ব্যবহার করে বার্তা বা তথ্য পাঠানোর একটি মাধ্যম।"],
+ [4,"ইন্টারনেট কী? [What is the Internet?]","ইন্টারনেট হলো বিশ্বব্যাপী সংযুক্ত কম্পিউটার নেটওয়ার্কের সমষ্টি, যা তথ্য আদানপ্রদানের সুযোগ দেয়।"],
+ [5,"ডেটা কী? [What is data?]","ডেটা হলো অপরিশোধিত বা কাঁচা তথ্য, যা পরবর্তীতে প্রক্রিয়াজাত হয়ে তথ্য বা জ্ঞানে রূপান্তরিত হয়।"],
+ [6,"সিস্টেম ইউনিট কী? [What is system unit?]","সিস্টেম ইউনিট হলো কম্পিউটারের মূল অংশ যেখানে তথ্য প্রক্রিয়াকরণ, মেমরি ও প্রসেসর থাকে।"],
+ [7,"সিস্টেম ইউনিটের অংশ কয়টি? [How many parts are there in a system unit?]","সিস্টেম ইউনিটের অংশ তিনটি। যথা: ইনপুট ইউনিট, প্রসেসিং ইউনিট ও আউটপুট ইউনিট।"],
+ [8,"RAM কী? [What is RAM?]","RAM হলো অস্থায়ী মেমরি, যা কম্পিউটার চলাকালে ডেটা ও প্রোগ্রাম সংরক্ষণে ব্যবহৃত হয়।"],
+ [9,"ROM কী? [What is ROM?]","ROM হলো স্থায়ী মেমোরি, যা কম্পিউটার চালু হওয়া থেকে প্রয়োজনীয় নির্দেশনা সরবরাহ করে।"],
+ [10,"প্রসেসর কী? [What is a processor?]","প্রসেসর হলো এমন একটি চিপ, যা কম্পিউটারের সকল নির্দেশনা বিশ্লেষণ ও তথ্য প্রাক্রিয়াকরণ করে।"],
+ [11,"কম্পিউটার সিস্টেম কী? [What is computer system?]","কম্পিউটার সিস্টেম হলো হার্ডওয়্যার, সফটওয়্যার এবং ইউজারের সমন্বিত রূপ, যা তথ্য প্রক্রিয়াকরণ করে।"],
+ [12,"সফটওয়্যার কত প্রকার ও কী কী? [What are the two types of software?]","সফটওয়্যার দুই প্রকার। যথা: ১. সিস্টেম সফটওয়্যার ও ২. অ্যাপ্লিকেশন সফটওয়্যার।"],
+ [13,"সিস্টেম সফটওয়্যার কী? [What is system software?]","সিস্টেম সফটওয়্যার হলো এমন সফটওয়্যার, যা কম্পিউটারের হার্ডওয়্যারকে নিয়ন্ত্রণ ও পরিচালনা করে।"],
+ [14,"অ্যাপ্লিকেশন সফটওয়্যার কী? [What is application software?]","অ্যাপ্লিকেশন সফটওয়্যার হলো ব্যবহারকারীর নির্দিষ্ট কাজ সম্পাদনের জন্য তৈরি প্রোগ্রাম।"],
+ [15,"কম্পিউটার প্রোগ্রাম কী? [What is computer program?]","কম্পিউটার প্রোগ্রাম হলো কম্পিউটারের ভাষায় লেখা নির্দেশনার সমষ্টি, যা কোনো কাজ সম্পাদন করে।"],
+ [16,"অপারেটিং সিস্টেম কী? [What is an operating system?]","অপারেটিং সিস্টেম হলো সিস্টেম সফটওয়্যার, যা কম্পিউটারের হার্ডওয়্যার ও সফটওয়্যার ব্যবস্থাকে নিয়ন্ত্রণ করে।"],
+ [17,"GUI কী? [What is GUI?]","GUI বা Graphical User Interface হলো এমন ব্যবহারকারী ইন্টারফেস, যা চিত্র ও আইকন ব্যবহার করে কমান্ড সম্পাদন করে।"],
+ [18,"কম্পিউটার নেটওয়ার্ক কী? [What is a computer network?]","কম্পিউটার নেটওয়ার্ক হলো একাধিক কম্পিউটার ও ডিভাইস সংযুক্ত একটি সিস্টেম, যা তথ্য আদানপ্রদানের সুযোগ দেয়।"],
+ [19,"মডেম কী? [What is a modem?]","মডেম হলো এমন একটি ডিভাইস যা ডিজিটাল ডেটাকে অ্যানালগ সিগন্যালে এবং অ্যানালগ সিগন্যালকে ডিজিটাল ডেটায় রূপান্তর করে।"],
+ [20,"LAN কী? [What is LAN?]","LAN বা Local Area Network হলো সীমিত অঞ্চলে সংযুক্ত কম্পিউটারের নেটওয়ার্ক।"],
+ [21,"WAN কী? [What is WAN?]","WAN বা Wide Area Network হলো বিস্তৃত অঞ্চলে সংযুক্ত কম্পিউটারের নেটওয়ার্ক।"],
+ [22,"হাইব্রিড কম্পিউটার কী? [What is Hybrid Computer?]","অ্যানালগ কম্পিউটার এবং ডিজিটাল কম্পিউটার এ দুই শ্রেণির কম্পিউটার প্রযুক্তির সমন্বয়ে তৈরি কম্পিউটারকে হাইব্রিড কম্পিউটার বলে।"],
+ [23,"সুপার কম্পিউটার কী? [What is a supercomputer?]","সুপার কম্পিউটার হলো অত্যন্ত দ্রুত কম্পিউটার, যা জটিল গণনা ও বিজ্ঞান গবেষণায় ব্যবহৃত হয়।"],
+ [24,"আইপি ঠিকানা কী? [What is an IP address?]","আইপি ঠিকানা হলো নেটওয়ার্কের প্রতিটি কম্পিউটার বা ডিভাইসকে শনাক্ত করার জন্য নির্দিষ্ট সংখ্যা।"],
+ [25,"URL কী? [What is a URL?]","URL বা Uniform Resource Locator হলো ওয়েবসাইটের ঠিকানা, যা ইন্টারনেটে পেজ খুঁজতে সাহায্য করে।"],
+ [26,"সার্চ ইঞ্জিন কী? [What is a search engine?]","সার্চ ইঞ্জিন হলো ইন্টারনেটে তথ্য খুঁজে বের করার সফটওয়্যার।"],
+ [27,"ডেটাবেস কী? [What is a database?]","ডেটাবেস হলো সুশৃঙ্খলভাবে সংরক্ষিত তথ্যের সমষ্টি, যা প্রয়োজন অনুযায়ী অ্যাক্সেস করা যায়।"],
+ [28,"IoT কী বোঝায়? [What is IoT?]","IoT বা Internet of Things হলো এমন প্রযুক্তি যেখানে দৈনন্দিন ডিভাইস ইন্টারনেটের মাধ্যমে সংযুক্ত থাকে।"],
+ [29,"ওয়েব সার্ভার কী? [What is a web server?]","ওয়েব সার্ভার হলো এমন কম্পিউটার, যা ব্যবহারকারীর অনুরোধে ওয়েবপেজ সংরক্ষণ ও প্রদর্শন করে।"],
+ [30,"ই-কমার্স কী? [What is e-commerce?]","ই-কমার্স হলো ইন্টারনেট ব্যবহার করে পণ্য ও সেবা ক্রয়-বিক্রয় করার পদ্ধতি।"]
+]},
+{ cat:"২য় অধ্যায়: কম্পিউটার হার্ডওয়্যার ও সফটওয়্যার", items:[
+ [31,"হার্ডওয়্যার কী? [What is hardware?]","হার্ডওয়্যার হলো কম্পিউটারের দৃশ্যমান ও স্পর্শযোগ্য অংশসমূহ।"],
+ [32,"সফটওয়্যার কী? [What is software?]","সফটওয়্যার হলো কম্পিউটারে নির্দিষ্ট কাজ সম্পাদনের উদ্দেশ্যে লিখিত নির্দেশনার সমষ্টি।"],
+ [33,"ইনপুট কী? [What is input?]","ইনপুট হলো ব্যবহারকারী প্রদত্ত ডেটা বা নির্দেশনা, যা কম্পিউটারে প্রবেশ করানো হয়।"],
+ [34,"আউটপুট কী? [What is output?]","আউটপুট হলো প্রক্রিয়াজাত তথ্য, যা ফলাফল হিসেবে ব্যবহারকারীর কাছে উপস্থাপিত হয়।"],
+ [35,"ইনপুট ডিভাইস বলতে কী বুঝ? [What is an input device?]","ইনপুট ডিভাইস এমন হার্ডওয়্যার, যা ডেটা কম্পিউটারে প্রবেশ করায়।"],
+ [36,"আউটপুট ডিভাইস বলতে কী বুঝ? [What is an output device?]","আউটপুট ডিভাইস এমন হার্ডওয়্যার, যা প্রক্রিয়াজাত তথ্য প্রদর্শন করে।"],
+ [37,"কী-বোর্ড কী? [What is keyboard?]","কী-বোর্ড হলো অক্ষর, সংখ্যা ও নিয়ন্ত্রণ নির্দেশ প্রবেশ করানোর ইনপুট ডিভাইস।"],
+ [38,"মাউস কী? [What is mouse?]","মাউস হলো নির্দেশক বা পয়েন্টিং ইনপুট ডিভাইস, যা পর্দায় কার্সর নিয়ন্ত্রণ করে।"],
+ [39,"ট্র্যাকবল কী? [What is trackball?]","ট্র্যাকবল হলো উল্টো মাউসের মতো একটি ইনপুট ডিভাইস যেখানে বল ঘুরিয়ে কার্সর নিয়ন্ত্রণ করা হয়।"],
+ [40,"জয়স্টিক কী? [What is joystick?]","জয়স্টিক হলো গেম ও সিমুলেশনে দিকনির্দেশ নিয়ন্ত্রণের জন্য ব্যবহৃত ইনপুট ডিভাইস।"],
+ [41,"বার কোড কী? [What is barcode?]","বারকোড হলো ডেটাকে রেখা ও ফাঁকা জায়গার সমন্বয়ে দৃশ্যমানভাবে প্রকাশের পদ্ধতি।"],
+ [42,"MICR কী ও এর ব্যবহার কী? [What is MICR and its use?]","MICR হলো Magnetic Ink Character Recognition, যা ব্যাংকে চেক প্রসেসিংয়ে ব্যবহৃত হয়।"],
+ [43,"স্ক্যানার কী? [What is scanner?]","স্ক্যানার হলো কাগজে থাকা লেখা/ছবি ডিজিটাল আকারে রূপান্তরকারী ইনপুট ডিভাইস।"],
+ [44,"CPU এর পূর্ণরূপ কী? [What is the full form of CPU?]","CPU এর পূর্ণরূপ হলো Central Processing Unit."],
+ [45,"মাদারবোর্ড কী? [What is a motherboard?]","মাদারবোর্ড হলো সিস্টেম ইউনিটের প্রধান সার্কিট বোর্ড, যেখানে প্রসেসর, RAM ও অন্যান্য ডিভাইস সংযুক্ত থাকে।"]
+]},
+{ cat:"৩য় অধ্যায়: ওয়ার্ড প্রসেসিং অ্যাপ্লিকেশন", items:[
+ [46,"ওয়ার্ড প্রসেসিং বলতে কী বুঝ? [What is word processing?]","ওয়ার্ড প্রসেসিং হলো লেখা তৈরি, সম্পাদনা ও সাজানোর প্রক্রিয়া।"],
+ [47,"MS Word কী? [What is MS Word?]","MS Word হলো Microsoft এর তৈরি একটি ওয়ার্ড প্রসেসর সফটওয়্যার।"],
+ [48,"ওয়ার্ড প্রসেসর কী? [What is a word processor?]","ওয়ার্ড প্রসেসর হলো লেখার জন্য ব্যবহৃত একটি সফটওয়্যার।"],
+ [49,"ডকুমেন্ট কী? [What is document?]","ডকুমেন্ট হলো সংরক্ষিত লেখা বা টেক্সট ফাইল।"],
+ [50,"Underline কী? [What is Underline?]","Underline হলো টেক্সটের নিচে রেখা বা দাগ দেওয়া।"],
+ [51,"এলাইনমেন্ট কী? [What is Alignment?]","এলাইনমেন্ট হলো লেখার অবস্থান নির্ধারণের প্রক্রিয়া।"],
+ [52,"Formatting কী? [What is Formatting?]","Formatting হলো লেখার স্টাইল, ফন্ট বা রঙ পরিবর্তনের প্রক্রিয়া।"],
+ [53,"Paste কমান্ড কী করে? [What does the paste command do?]","Paste কমান্ড ক্লিপবোর্ডে থাকা টেক্সটকে স্থাপন করে।"],
+ [54,"Undo কী করে? [What does Undo do?]","Undo কমান্ড সর্বশেষ করা কাজ বাতিল করে।"],
+ [55,"Redo কী করে? [What does Redo do?]","Redo কমান্ড Undo করা কাজ পুনরায় প্রযোজ্য করে।"],
+ [56,"Header কী? [What is Header?]","Header হলো পৃষ্ঠার উপরের অংশে থাকা লেখা বা তথ্য।"],
+ [57,"Footer কী? [What is a Footer?]","Footer হলো পৃষ্ঠার নিচের অংশে থাকা লেখা বা তথ্য।"],
+ [58,"Save কমান্ড কী? [What is the Save command?]","Save কমান্ড ডকুমেন্ট সংরক্ষণ করে।"],
+ [59,"Save As কী? [What is Save As Command?]","Save As কমান্ড হলো ডকুমেন্টকে নতুন নামে সংরক্ষণ করে।"],
+ [60,"Page number কী? [What is Page number?]","Page number হলো পৃষ্ঠার ক্রমিক সংখ্যা প্রদর্শন করার ব্যবস্থা।"],
+ [61,"Page Setup কী? [What is Page Setup?]","Page Setup হলো পৃষ্ঠার আকার, মার্জিন ও লেআউট নির্ধারণের প্রক্রিয়া।"],
+ [62,"Font কী? [What is Font?]","Font হলো লেখার ধরন বা অক্ষরের স্টাইল।"],
+ [63,"Font size কী? [What is Font size?]","Font size হলো অক্ষরের উচ্চতা বা আকার নির্ধারণ।"]
+]},
+{ cat:"৪র্থ অধ্যায়: স্প্রেডশিট অ্যাপ্লিকেশন", items:[
+ [64,"স্প্রেডশিট কী? [What is spreadsheet?]","স্প্রেডশিট হলো ডেটা সারি ও কলাম সংরক্ষণের সফটওয়্যার।"],
+ [65,"ওয়ার্কশিট কী? [What is worksheet?]","ওয়ার্কশিট হলো একটি একক স্প্রেডশিট পৃষ্ঠা।"],
+ [66,"ওয়ার্কবুক কী? [What is workbook?]","ওয়ার্কবুক হলো একাধিক ওয়ার্কশিটের সমষ্টি।"],
+ [67,"সেল কী? [What is a cell?]","সেল হলো সারি ও কলামের ছেদবিন্দু।"],
+ [68,"রো কী? [What is row?]","রো হলো আনুভূমিক ডেটার সারি।"],
+ [69,"কলাম কী? [What is column?]","কলাম হলো উল্লম্ব ডেটার সারি।"],
+ [70,"ফর্মুলা কী? [What is formula?]","ফর্মুলা হলো হিসাব বা গণনার জন্য ব্যবহৃত এক্সপ্রেশন।"],
+ [71,"ফাংশন কী? [What is function?]","ফাংশন হলো পূর্বনির্ধারিত ফর্মুলা যা দ্রুত হিসাব করতে সাহায্য করে।"],
+ [72,"SUM ফাংশনের কাজ কী? [What does the SUM function do?]","SUM ফাংশনের কাজ হলো একটি রো বা কলামের মানগুলো যোগ করা।"],
+ [73,"ডাটা এন্ট্রি কী? [What is Data Entry?]","ডাটা এন্ট্রি হলো সেলে তথ্য লিখা বা প্রবেশ করানো।"],
+ [74,"অটোফিল কী? [What is Autofill?]","অটোফিল হলো তথ্য স্বয়ংক্রিয়ভাবে সেলে পূরণ করার ফিচার।"],
+ [75,"চার্ট কী? [What is chart?]","চার্ট হলো ডেটার গ্রাফিক্যাল উপস্থাপনা।"]
+]},
+{ cat:"৫ম অধ্যায়: প্রেজেন্টেশন অ্যাপ্লিকেশন", items:[
+ [76,"প্রেজেন্টেশন অ্যাপ্লিকেশন কী? [What is a Presentation Application?]","প্রেজেন্টেশন অ্যাপ্লিকেশন হলো তথ্য বা ধারণা দৃশ্যমানভাবে উপস্থাপনের সফটওয়্যার।"],
+ [77,"অ্যানিমেশন কী? [What is Animation?]","অ্যানিমেশন হলো অবজেক্টে চলাচলের প্রভাব যোগ করার প্রক্রিয়া।"],
+ [78,"ট্রানজিশন কী? [What is Transition?]","ট্রানজিশন হলো স্লাইড পরিবর্তনের সময়ের ভিজ্যুয়াল এফেক্ট।"],
+ [79,"স্মার্ট আর্ট কী? [What is Smart Art?]","স্মার্ট আর্ট হলো ভিজ্যুয়াল ডায়াগ্রাম তৈরির টুল।"],
+ [80,"স্লাইড মাস্টার কী? [What is Slide Master?]","স্লাইড মাস্টার হলো সকল স্লাইডের নকশা নিয়ন্ত্রণকারী টেমপ্লেট।"],
+ [81,"হেডার ও ফুটার কী? [What are Header and Footer?]","হেডার হলো স্লাইডের উপরের অংশের তথ্য ও ফুটার হলো নিচের অংশের তথ্য।"],
+ [82,"স্লাইড-শো শুরু করার শর্টকাট কী? [Shortcut to start Slide Show?]","স্লাইড-শো শুরু করার শর্টকাট হলো F5 কী।"],
+ [83,"প্রেজেন্টেশনে বুলেট কী? [What is Bullet in a presentation?]","প্রেজেন্টেশনে বুলেট হলো তালিকা তৈরির জন্য ব্যবহৃত চিহ্ন।"],
+ [84,"স্লাইড কী? [What is a Slide?]","স্লাইড হলো প্রেজেন্টেশনের একটি একক পৃষ্ঠা।"],
+ [85,"Insert ট্যাবের কাজ কী? [What is the use of Insert tab?]","Insert ট্যাবের কাজ হলো ছবি, টেবিল, চার্ট ও ভিডিও যোগ করা।"],
+ [86,"Design ট্যাবের কাজ কী? [What is the use of Design tab?]","Design ট্যাবের কাজ হলো স্লাইডের চেহারা ও নকশা পরিবর্তন করা।"],
+ [87,"Outline View কী? [What is Outline View?]","Outline View হলো শুধু টেক্সটভিত্তিক স্লাইডের রূপরেখা দেখার মোড।"],
+ [88,"Zoom টুল কী? [What is Zoom tool?]","Zoom টুল হলো এমন একটি টুল, যা ব্যবহার করে স্লাইডের নির্দিষ্ট অংশে নিকট বা দূরবর্তী ভিউ নেওয়া যায়।"]
+]},
+{ cat:"৬ষ্ঠ অধ্যায়: গোপনীয়তা এবং নিরাপত্তা", items:[
+ [89,"গোপনীয়তা কী? [What is Privacy?]","ব্যক্তিগত তথ্যের সুরক্ষাকে গোপনীয়তা বলা হয়।"],
+ [90,"সাইবার নিরাপত্তা কী? [What is Cyber Security?]","সাইবার নিরাপত্তা হলো ইন্টারনেট নির্ভর সিস্টেম ও নেটওয়ার্ক সুরক্ষা।"],
+ [91,"ফিশিং কী? [What is Phishing?]","ফিশিং হলো ভুয়া ইমেইল বা ওয়েবসাইটের মাধ্যমে তথ্য চুরি করা।"],
+ [92,"হ্যাকিং কী? [What is Hacking?]","হ্যাকিং হলো অননুমোদিতভাবে সিস্টেমে প্রবেশ করা।"],
+ [93,"স্পাইওয়্যার কী? [What is Spyware?]","স্পাইওয়্যার হলো ব্যবহারকারীর তথ্য গোপনে সংগ্রহকারী সফটওয়্যার।"],
+ [94,"ম্যালওয়্যার কী? [What is Malware?]","ম্যালওয়্যার হলো ক্ষতিকর সফটওয়্যার, যা সিস্টেম নষ্ট করে।"],
+ [95,"ফায়ারওয়াল কী? [What is Firewall?]","ফায়ারওয়াল হলো নেটওয়ার্কে অননুমোদিত প্রবেশ বন্ধ করার ব্যবস্থা।"],
+ [96,"ডেটা ইন্টেগ্রিটি কী? [What is Data Integrity?]","ডেটা ইন্টেগ্রিটি হলো তথ্যের সঠিকতা ও অপরিবর্তিত থাকা।"],
+ [97,"প্রাইভেসি পলিসি কী? [What is Privacy Policy?]","প্রাইভেসি পলিসি হলো প্রতিষ্ঠান কীভাবে ব্যবহারকারীর তথ্য ব্যবহার করবে তা নির্ধারণ করা নীতি।"],
+ [98,"ভাইরাস কী? [What is Virus?]","ভাইরাস হলো এক ধরনের ক্ষতিকর প্রোগ্রাম, যা নিজে নিজে ছড়িয়ে পড়ে সিস্টেমের ক্ষতি করে।"],
+ [99,"ডেটা এনক্রিপশন কী? [What is Data Encryption?]","ডেটা এনক্রিপশন হলো তথ্যকে কোড আকারে রূপান্তর করা।"],
+ [100,"VPN এর কাজ কী? [What is the use of VPN?]","VPN হলো ইন্টারনেট যোগাযোগকে এনক্রিপ্ট করে গোপন রাখা।"],
+ [101,"কুকিজ কী? [What are Cookies?]","কুকিজ হলো ওয়েবসাইটে ব্যবহারকারীর তথ্য সংরক্ষণের ছোট ফাইল।"],
+ [102,"ই-মেইল স্প্যাম কী? [What is Email Spam?]","ই-মেইল স্প্যাম হলো অনিচ্ছুক ও অননুমোদিত ই-মেইল বার্তা।"],
+ [103,"সাইবার বুলিং কী? [What is Cyber Bullying?]","সাইবার বুলিং হলো অনলাইনে কাউকে হয়রানি করা।"],
+ [104,"ডেটা প্রোটেকশন কী? [What is Data Protection?]","ডেটা প্রোটেকশন হলো তথ্য চুরি বা ক্ষতি থেকে সুরক্ষা দেওয়া।"],
+ [105,"সাইবার আক্রমণ কী? [What is Cyber Attack?]","সাইবার আক্রমণ হলো ইন্টারনেটের মাধ্যমে সিস্টেমে আক্রমণ করা।"]
+]},
+{ cat:"৭ম অধ্যায়: ইন্টারনেট ব্যবহার", items:[
+ [106,"ইন্টারনেট কী? [What is Internet?]","ইন্টারনেট হলো একটি বৈশ্বিক কম্পিউটার নেটওয়ার্ক ব্যবস্থা।"],
+ [107,"ইন্টারনেটের পূর্ণরূপ কী? [What is the Full form of Internet?]","ইন্টারনেটের পূর্ণরূপ Interconnected Network."],
+ [108,"ওয়েব ব্রাউজার কী? [What is Web Browser?]","ওয়েব ব্রাউজার হলো ইন্টারনেটে ওয়েবসাইট দেখার সফটওয়্যার।"],
+ [109,"সার্চ ইঞ্জিন কী? [What is Search Engine?]","সার্চ ইঞ্জিন হলো তথ্য খোঁজার জন্য ব্যবহৃত ওয়েব টুল।"],
+ [110,"চ্যাটিং কী? [What is Chatting?]","চ্যাটিং হলো অনলাইনে তাৎক্ষণিক বার্তা বিনিময়।"],
+ [111,"ভিডিয়ো কনফারেন্সিং কী? [What is Video Conferencing?]","ভিডিয়ো কনফারেন্সিং হলো ইন্টারনেটের মাধ্যমে সরাসরি যোগাযোগ ব্যবস্থা।"],
+ [112,"ওয়েবসাইট কী? [What is Website?]","ওয়েবসাইট হলো ওয়েব পৃষ্ঠাসমূহের সংগ্রহ।"],
+ [113,"ওয়েবপেজ কী? [What is Webpage?]","ওয়েবপেজ হলো একটি একক অনলাইন পৃষ্ঠা।"],
+ [114,"ব্লগ কী? [What is Blog?]","ব্লগ হলো অনলাইন ব্যক্তিগত বা তথ্যভিত্তিক লেখা।"],
+ [115,"সোশ্যাল মিডিয়া কী? [What is Social Media?]","সোশ্যাল মিডিয়া হলো অনলাইন যোগাযোগ ও তথ্য বিনিময় প্ল্যাটফর্ম।"],
+ [116,"ডাউনলোডিং কী? [What is Downloading?]","ডাউনলোডিং হলো ইন্টারনেট থেকে ডেটা গ্রহণ করা।"],
+ [117,"আপলোডিং কী? [What is Uploading?]","আপলোডিং হলো নিজের ডেটা অনলাইনে পাঠানো।"],
+ [118,"ডেটা ট্রান্সমিশন কী? [What is Data Transmission?]","ডেটা ট্রান্সমিশন হলো একস্থান থেকে অন্যস্থানে ডেটা প্রেরণ।"],
+ [119,"ই-মেইল অ্যাটাচমেন্ট কী? [What is Email Attachment?]","ই-মেইল অ্যাটাচমেন্ট হলো ই-মেইলে যুক্ত ফাইল।"],
+ [120,"ওয়েব হোস্টিং কী? [What is Web Hosting?]","ওয়েব হোস্টিং হলো সার্ভারে ওয়েবসাইট সংরক্ষণ ও অনলাইনে প্রদর্শনের ব্যবস্থা।"]
+]},
+{ cat:"৮ম অধ্যায়: উদীয়মান প্রযুক্তি (ডেটা অ্যানালিটিক্স, AI, ML)", items:[
+ [121,"উদীয়মান প্রযুক্তি কী? [What is Emerging Technology?]","উদীয়মান প্রযুক্তি হলো নতুন ও উন্নয়নশীল প্রযুক্তি, যা সমাজ ও অর্থনীতিতে প্রভাব ফেলে।"],
+ [122,"রোবোটিকস কী? [What is Robotics?]","রোবোটিকস হলো রোবট তৈরি ও ব্যবহারের বিজ্ঞান ও প্রযুক্তি।"],
+ [123,"বায়োটেকনোলজি কী? [What is Biotechnology?]","বায়োটেকনোলজি হলো জীববিজ্ঞানের প্রযুক্তি ব্যবহার করে নতুন পদ্ধতি তৈরি করা।"],
+ [124,"বায়োমেট্রিক প্রযুক্তি কী? [What is Biometric Technology?]","বায়োমেট্রিক প্রযুক্তি হলো দেহগত বৈশিষ্ট্য দ্বারা ব্যক্তিকে শনাক্ত করার পদ্ধতি।"],
+ [125,"স্মার্ট ডিভাইস কী? [What is Smart Device?]","স্মার্ট ডিভাইস হলো ইন্টারনেট সংযুক্ত স্বয়ংক্রিয় ডিভাইস।"],
+ [126,"ড্রোন কী? [What is Drone?]","ড্রোন হলো দূরনিয়ন্ত্রিত উড়ন্ত যন্ত্র, যা বিভিন্ন কাজ সম্পাদন করতে পারে।"],
+ [127,"ভার্চুয়াল রিয়েলিটি কী? [What is Virtual Reality?]","ভার্চুয়াল রিয়েলিটি হলো কল্পিত বাস্তব অভিজ্ঞতা প্রদানকারী প্রযুক্তি।"],
+ [128,"স্মার্ট সিটি কী? [What is Smart City?]","স্মার্ট সিটি হলো প্রযুক্তিনির্ভর আধুনিক নগরব্যবস্থা।"],
+ [129,"কৃত্রিম বুদ্ধিমত্তা কী? [What is Artificial Intelligence (AI)?]","কৃত্রিম বুদ্ধিমত্তা হলো মানুষের মতো চিন্তাশীল ও সিদ্ধান্তগ্রহণকারী প্রযুক্তি।"],
+ [130,"AI কে প্রবর্তন করেন? [Who introduced AI?]","AI প্রবর্তন করেন জন ম্যাককার্থি।"],
+ [131,"AI এর কাজ কী? [What does AI do?]","AI স্বয়ংক্রিয়ভাবে ডেটা বিশ্লেষণ করে সিদ্ধান্ত নেয়।"],
+ [132,"মেশিন লার্নিং কী? [What is Machine Learning (ML)?]","মেশিন লার্নিং হলো মেশিনের স্বয়ংক্রিয় শেখার প্রক্রিয়া।"],
+ [133,"ডিপ লার্নিং কী? [What is Deep Learning?]","ডিপ লার্নিং হলো নিউরাল নেটওয়ার্কভিত্তিক উন্নত মেশিন লার্নিং পন্থতি।"],
+ [134,"নিউরাল নেটওয়ার্ক কী? [What is Neural Network?]","নিউরাল নেটওয়ার্ক হলো মানুষের মস্তিষ্কের কাঠামো অনুকরণ করে তৈরি কৃত্রিম সিস্টেম।"]
+]},
+{ cat:"৯ম অধ্যায়: ফ্রিল্যান্সিং পরিচিতি", items:[
+ [135,"ফ্রিল্যান্সিং কী? [What is freelancing?]","ফ্রিল্যান্সিং হলো একটি মুক্ত পেশা, সেখানে একজন ব্যক্তি কোনো প্রতিষ্ঠানে স্থায়ী কর্মী না হয়ে নিজের দক্ষতা অনুযায়ী বিভিন্ন ব্যক্তি বা সংস্থার জন্য চুক্তিভিত্তিক কাজ করেন।"],
+ [136,"ফ্রিল্যান্সিংয়ের তিনটি জনপ্রিয় ক্ষেত্র লেখ। [Write three popular fields of freelancing.]","ফ্রিল্যান্সিংয়ের তিনটি জনপ্রিয় ক্ষেত্র হলো গ্রাফিক্স ডিজাইন, ওয়েব ডিজাইন ও ডেভেলপমেন্ট এবং ডিজিটাল মার্কেটিং।"],
+ [137,"গ্রাফিক্স ডিজাইনের মূল সফটওয়্যারগুলোর নাম লেখ। [Write the names of the main software used in graphic design.]","গ্রাফিক ডিজাইনের মূল সফটওয়্যারগুলো হলো Adobe Photoshop, Adobe Illustrator এবং Adobe InDesign।"],
+ [138,"UX এর পূর্ণরূপ কী? [What is the full form of UX?]","UX এর পূর্ণরূপ User Experience."],
+ [139,"HTML এর পূর্ণরূপ কী? [What is the full form of HTML?]","HTML এর পূর্ণরূপ Hyper Text Markup Language."],
+ [140,"ভিডিও এডিটিংয়ের ক্ষেত্রে ব্যবহৃত সফটওয়্যারগুলোর নাম লেখ। [Write the names of the software used in video editing.]","ভিডিও এডিটিংয়ের ক্ষেত্রে ব্যবহৃত সফটওয়্যারগুলো হলো Premiere Pro, After Effects ও CapCut ইত্যাদি।"],
+ [141,"3D অ্যানিমেশনের কাজ কী? [What is the work of 3D animation?]","3D অ্যানিমেশনের কাজ হলো 3D মডেলিং, রিগিং, টেক্সচারিং এবং রেন্ডারিং করা।"],
+ [142,"ব্যাকএন্ড ডেভেলপমেন্টে ব্যবহৃত দুটি প্রোগ্রামিং ভাষার নাম লেখ। [Write the names of two programming languages used in backend development.]","ব্যাকএন্ড ডেভেলপমেন্টে ব্যবহৃত দুটি প্রোগ্রামিং ভাষা হলো Python ও PHP।"],
+ [143,"জনপ্রিয় ফ্রিল্যান্সিং মার্কেটপ্লেসগুলোর নাম লেখ। [Write the names of popular freelancing marketplaces.]","জনপ্রিয় ফ্রিল্যান্সিং মার্কেটপ্লেসগুলো হলো: ১. আপওয়ার্ক (Upwork), ২. ফ্রিল্যান্সার ডট কম (Freelancer.com), ৩. ফাইভার (Fiverr), ৪. গুরু (Guru), ৫. People Per Hour, ৬. 99designs ও ৭. Toptal।"],
+ [144,"আপওয়ার্ক কী? [What is Upwork?]","আপওয়ার্ক হলো একটি জনপ্রিয় ফ্রিল্যান্সিং প্ল্যাটফর্ম, যেখানে ব্যবসায় এবং স্বতন্ত্র পেশাদাররা (ফ্রিল্যান্সার) বিভিন্ন প্রকল্পে কাজ করার জন্য একে অপরের সাথে যুক্ত হন।"],
+ [145,"ফ্রিল্যান্সার ডট কম কী? [What is Freelancer.com?]","ফ্রিল্যান্সার ডট কম হলো একটি অনলাইন মার্কেটপ্লেস। ফ্রিল্যান্সাররা (মুক্ত পেশাজীবীরা) বিভিন্ন কোম্পানির জন্য কাজ খুঁজে নিতে পারেন এবং কাজ জমা দিতে পারেন।"],
+ [146,"ফ্রিল্যান্সিং মার্কেটপ্লেসের দুটি নাম লেখ। [Write the names of two freelancing marketplaces.]","Upwork ও Fiverr দুটি জনপ্রিয় আন্তর্জাতিক ফ্রিল্যান্সিং মার্কেটপ্লেস।"],
+ [147,"SEO এর পূর্ণরূপ কী? [What is the full form of SEO?]","SEO এর পূর্ণরূপ Search Engine Optimization."],
+ [148,"লং-টার্ম ক্লায়েন্ট বলতে কী বুঝায়? [What is meant by a long-term client?]","যে ক্লায়েন্ট দীর্ঘসময় ধরে একাধিক প্রকল্পে একই ফ্রিল্যান্সারের সাথে কাজ করে তাকে লং-টার্ম ক্লায়েন্ট বলে।"],
+ [149,"৯৯ডিজাইন কী? [What is 99designs?]","৯৯ডিজাইন হলো একটি ফ্রিল্যান্সার প্ল্যাটফর্ম যেখানে গ্রাফিক ডিজাইনাররা ক্লায়েন্টদের সাথে কাজ করে।"],
+ [150,"ফ্রিল্যান্সিং প্রোফাইল কী? [What is a freelancing profile?]","ফ্রিল্যান্সিং প্রোফাইল হলো একটি অনলাইন পোর্টফোলিও যা একজন ফ্রিল্যান্সার তার দক্ষতা, অভিজ্ঞতা এবং কাজের নমুনা তুলে ধরতে ব্যবহার করেন।"],
+ [151,"ফ্রিল্যান্সিং প্রোফাইল তৈরি করার সময় কী কী তথ্য দিতে হয়? [What information needs to be provided when creating a profile?]","ফ্রিল্যান্সিং প্রোফাইল তৈরি করার সময় নাম, দক্ষতা, অভিজ্ঞতা, প্রোফাইল ছবি ও পোর্টফোলিও তথ্য দিতে হয়। এগুলো ক্লায়েন্টকে ফ্রিল্যান্সারের যোগ্যতা বুঝাতে সহায়তা করে।"],
+ [152,"ফ্রিল্যান্সিং পোর্টফোলিও কী? [What is a freelancing portfolio?]","ফ্রিল্যান্সিং পোর্টফোলিও হলো নিজের দক্ষতা ও কাজের অভিজ্ঞতার একটি সংগ্রহ। যেখানে নিজের সেরা কাজগুলো প্রদর্শন করা হয়।"]
+]}
+];
+
+const data = [];
+chapters.forEach(ch => ch.items.forEach(it => data.push({id:it[0], cat:ch.cat, q:it[1], a:it[2]})));
+
+const STORAGE_KEY = "ict_viva_progress_v2";
+let activeCat = "সব";
+let openId = null;
+
+function getProgress(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  }catch(e){ return {}; }
+}
+function setProgress(p){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }catch(e){}
+}
+function toggleDone(id, checked){
+  const p = getProgress();
+  if(checked){ p[id] = true; } else { delete p[id]; }
+  setProgress(p);
+  updateProgressBar();
+  renderList();
+}
+function resetProgress(){
+  if(confirm("সব অগ্রগতি মুছে ফেলতে চান?")){
+    setProgress({});
+    updateProgressBar();
+    renderList();
+  }
+}
+function updateProgressBar(){
+  const p = getProgress();
+  const done = Object.keys(p).length;
+  const total = data.length;
+  document.getElementById("progress-text").textContent = done + "/" + total;
+  document.getElementById("progress-fill").style.width = (total? (done/total*100) : 0) + "%";
+}
+
+function buildFilters(){
+  const cats = ["সব", ...new Set(data.map(d=>d.cat))];
+  const row = document.getElementById("filter-row");
+  row.innerHTML = "";
+  cats.forEach(c=>{
+    const chip = document.createElement("div");
+    chip.className = "chip" + (c===activeCat ? " active":"");
+    chip.textContent = c;
+    chip.onclick = ()=>{ activeCat = c; buildFilters(); renderList(); };
+    row.appendChild(chip);
+  });
+}
+
+function renderList(){
+  const term = document.getElementById("search").value.trim().toLowerCase();
+  const p = getProgress();
+  const list = document.getElementById("qlist");
+  list.innerHTML = "";
+
+  const filtered = data.filter(d=>{
+    const matchCat = activeCat==="সব" || d.cat===activeCat;
+    const matchTerm = !term || d.q.toLowerCase().includes(term) || d.a.toLowerCase().includes(term);
+    return matchCat && matchTerm;
+  });
+
+  document.getElementById("count-info").textContent = filtered.length + " টি প্রশ্ন দেখানো হচ্ছে";
+
+  if(filtered.length===0){
+    list.innerHTML = '<div class="empty">কোনো প্রশ্ন পাওয়া যায়নি।</div>';
+    return;
+  }
+
+  let lastCat = null;
+  filtered.forEach(d=>{
+    if(activeCat==="সব" && d.cat !== lastCat){
+      const label = document.createElement("div");
+      label.className = "catlabel";
+      label.textContent = d.cat;
+      list.appendChild(label);
+      lastCat = d.cat;
+    }
+
+    const card = document.createElement("div");
+    card.className = "qcard" + (p[d.id] ? " done":"") + (openId===d.id ? " open":"");
+
+    const head = document.createElement("div");
+    head.className = "qhead";
+    head.onclick = ()=>{ openId = (openId===d.id ? null : d.id); renderList(); };
+    head.innerHTML = `<div class="qnum">${d.id}</div><div class="qtext">${d.q}</div><div class="qarrow">▶</div>`;
+    card.appendChild(head);
+
+    const body = document.createElement("div");
+    body.className = "qbody";
+    body.innerHTML = `<div>${d.a}</div>
+      <div class="checkrow">
+        <input type="checkbox" id="chk-${d.id}" ${p[d.id]?"checked":""}>
+        <label for="chk-${d.id}">মুখস্থ হয়েছে</label>
+      </div>`;
+    card.appendChild(body);
+
+    list.appendChild(card);
+
+    const chk = body.querySelector("input");
+    chk.onclick = (e)=>{ e.stopPropagation(); toggleDone(d.id, chk.checked); };
+  });
+}
+
+buildFilters();
+updateProgressBar();
+renderList();
+</script>
+</body>
+</html>
